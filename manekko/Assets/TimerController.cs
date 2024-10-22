@@ -1,62 +1,132 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class TimerController : MonoBehaviour
 {
-    public AudioClip beepSound; // Beep sound to play
-    public Text timerText; // Reference to the UI Text element
+    public AudioClip beepSound; // ビープ音を再生するためのサウンドクリップ
+    public Text timerText; // UIのText要素への参照
 
-    private AudioSource audioSource;
-    private bool timerRunning = false;
-    private float startTime;
-    private KeyCode[] startKeys = { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
-    private KeyCode[] stopKeys = { KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L };
-    private KeyCode currentStartKey;
+    private AudioSource audioSource; // オーディオソースコンポーネント
+    private bool timerRunning = false; // タイマーが動作中かどうかを管理するフラグ
+    private float startTime; // タイマー開始時間を記録
+    private KeyCode[] startKeys = { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D }; // タイマー開始に使用するキーの配列
+    private KeyCode[] stopKeys = { KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L }; // タイマー停止に使用するキーの配列
+    private KeyCode currentStartKey; // 現在タイマーを開始したキー
+    private Quaternion initialRotation; // 初期回転状態を保存するための変数
+    private bool isWLocked = false; // Wキーのロック状態
+    private bool isALocked = false; // Aキーのロック状態
+    private bool isSLocked = false; // Sキーのロック状態
+    private bool isDLocked = false; // Dキーのロック状態
+    private bool isILocked = false; // Iキーのロック状態
+    private bool isJLocked = false; // Jキーのロック状態
+    private bool isKLocked = false; // Kキーのロック状態
+    private bool isLLocked = false; // Lキーのロック状態
+
 
     void Start()
     {
+        // AudioSourceコンポーネントを取得
         audioSource = GetComponent<AudioSource>();
-        timerText.text = "0.00"; // Initialize the timer text
+        
+        // タイマーの初期表示を「ready」に設定
+        timerText.text = "ready";
     }
 
     void Update()
     {
-        // Start the timer
+        if (isWLocked )
+        {
+            return;
+        }
+        if (isALocked )
+        {
+            return;
+        }
+        if (isSLocked )
+        {
+            return;
+        }
+        if (isDLocked )
+        {
+            return;
+        }
+        if (isILocked )
+        {
+            return;
+        }
+        if (isJLocked )
+        {
+            return;
+        }
+        if (isKLocked )
+        {
+            return;
+        }
+        if (isLLocked )
+        {
+            return;
+        }
+        // タイマーを開始する
         foreach (KeyCode startKey in startKeys)
         {
+            // startKeysに含まれるキーが押されたらタイマーを開始
             if (Input.GetKeyDown(startKey))
             {
+                // タイマーがまだ動いていない場合のみ開始
                 if (!timerRunning)
                 {
-                    audioSource.PlayOneShot(beepSound);
-                    startTime = Time.time;
-                    timerRunning = true;
-                    currentStartKey = startKey;
-                    Debug.Log($"Timer started with {startKey} key");
+                    audioSource.PlayOneShot(beepSound); // ビープ音を再生
+                    startTime = Time.time; // 現在の時間を記録
+                    timerRunning = true; // タイマーが動作中であることを設定
+                    currentStartKey = startKey; // 開始キーを記録
+                    Debug.Log($"Timer started with {startKey} key"); // デバッグログに開始キーを表示
                 }
             }
         }
 
-        // Stop the timer corresponding to the start key
+        // タイマーを停止する（対応するキーでのみ停止可能）
         foreach (KeyCode stopKey in stopKeys)
         {
-            if (Input.GetKeyDown(stopKey) && timerRunning && stopKey == GetStopKey(currentStartKey))
+            // stopKeysに含まれるキーが押され、タイマーが動作中で、かつ対応する開始キーの場合のみ停止
+            if (Input.GetKeyDown(stopKey))
             {
-                float elapsedTime = Time.time - startTime;
-                timerRunning = false;
-                Debug.Log($"Timer stopped at {elapsedTime:F2} seconds with {stopKey} key");
+                if (timerRunning && stopKey == GetStopKey(currentStartKey))
+                {
+                    float elapsedTime = Time.time - startTime; // 経過時間を計算
+                    timerRunning = false; // タイマーを停止
+                    isWLocked = true;  // Wキーをロック
+                    isALocked = true;  // Aキーをロック
+                    isSLocked = true;  // Sキーをロック
+                    isDLocked = true;  // Dキーをロック
+                    isILocked = true;  // Iキーをロック
+                    isJLocked = true;  // Jキーをロック
+                    isKLocked = true;  // Kキーをロック
+                    isLLocked = true;  // Lキーをロック
+                    Debug.Log($"Timer stopped at {elapsedTime:F2} seconds with {stopKey} key"); // デバッグログに停止時の経過時間を表示
+
+                    // 3秒後にシーンをリセットするコルーチンを開始
+                    StartCoroutine(ResetSceneAfterDelay(3f));
+                }
+                else
+                {
+                    // 正しくないキーが押された場合、ペナルティとして1秒加算
+                    startTime -= 1f; // 経過時間を1秒戻す（つまり1秒ペナルティ）
+                    Debug.Log($"Penalty: 1 second added for pressing wrong key: {stopKey}");
+                }
             }
         }
 
-        // Update the timer display
+        // タイマーが動作中の場合、UIに現在の経過時間を表示する
         if (timerRunning)
         {
-            float currentTime = Time.time - startTime;
-            timerText.text = currentTime.ToString("F2");
+            float currentTime = Time.time - startTime; // 経過時間を計算
+            timerText.text = currentTime.ToString("F2"); // 経過時間を表示
         }
     }
 
-    // Helper method to get the corresponding stop key for a given start key
+    // 開始キーに対応する停止キーを取得するヘルパーメソッド
     private KeyCode GetStopKey(KeyCode startKey)
     {
         switch (startKey)
@@ -72,5 +142,12 @@ public class TimerController : MonoBehaviour
             default:
                 return KeyCode.None;
         }
+    }
+
+    // 一定時間後にシーンをリセットするためのコルーチン
+    private IEnumerator ResetSceneAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay); // 指定した時間待機
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // シーンをリセット
     }
 }

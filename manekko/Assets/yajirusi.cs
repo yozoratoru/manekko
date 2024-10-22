@@ -3,6 +3,10 @@ using UnityEngine;
 public class Yajirusi : MonoBehaviour
 {
     private Quaternion initialRotation;
+    private bool isILocked = false;
+    private bool isJLocked = false;
+    private bool isKLocked = false;
+    private bool isLLocked = false;
 
     void Start()
     {
@@ -12,6 +16,22 @@ public class Yajirusi : MonoBehaviour
 
     void Update()
     {
+        if (isILocked )
+        {
+            return;
+        }
+        if (isJLocked )
+        {
+            return;
+        }
+        if (isKLocked )
+        {
+            return;
+        }
+        if (isLLocked )
+        {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.I))
         {
             // オブジェクトを初期状態にリセットしてから右に90度回転させる
@@ -34,6 +54,7 @@ public class Yajirusi : MonoBehaviour
         {
             // オブジェクトを初期状態にリセットする
             ResetRotation();
+            
         }
     }
 
