@@ -70,24 +70,4 @@ public class ChangeObjectOnKeyPress : MonoBehaviour
         isDLocked = true;
         isButtonLocked = true; // ボタンをロックする
     }
-
-    // この関数は、ボタンや他のイベントから呼び出されてすべてのキーをロック解除する
-    public void UnlockKeys()
-    {
-        // すべてのキーのロックを解除
-        isWLocked = false;
-        isALocked = false;
-        isSLocked = false;
-        isDLocked = false;
-        isButtonLocked = false; // ボタンのロックを解除
-    }
-
-    // ボタンクリック時にキーのロック解除をトリガーする例
-    public void OnButtonClicked()
-    {
-        // ボタンがクリックされたときにすべてのキーのロックを解除
-        UnlockKeys();
-        PlayerPrefs.SetFloat("ButtonClicked", 1); // ボタンがクリックされたことを保存
-        PlayerPrefs.Save(); // PlayerPrefsを保存
-    }
 }

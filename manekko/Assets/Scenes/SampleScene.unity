@@ -890,6 +890,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beepSound: {fileID: 8300000, guid: 20595b884dc3044439e02943945f0a5d, type: 3}
   timerText: {fileID: 1942647367}
+  yajirusi: {fileID: 793342235}
 --- !u!1 &993878347
 GameObject:
   m_ObjectHideFlags: 0

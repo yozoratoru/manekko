@@ -63,4 +63,13 @@ public class Yajirusi : MonoBehaviour
         // オブジェクトの回転を初期状態にリセット
         transform.rotation = initialRotation;
     }
+    // IJKLキーをロックするためのメソッド
+    public void LockKeys()
+    {
+        isILocked = true;
+        isJLocked = true;
+        isKLocked = true;
+        isLLocked = true;
+        Debug.Log("IJKL keys locked");
+    }
 }

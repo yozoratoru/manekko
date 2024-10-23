@@ -7,6 +7,7 @@ public class TimerController : MonoBehaviour
 {
     public AudioClip beepSound; // ビープ音を再生するためのサウンドクリップ
     public Text timerText; // UIのText要素への参照
+    public Yajirusi yajirusi; // Yajirusiスクリプトへの参照
 
     private AudioSource audioSource; // オーディオソースコンポーネント
     private bool timerRunning = false; // タイマーが動作中かどうかを管理するフラグ
@@ -19,12 +20,6 @@ public class TimerController : MonoBehaviour
     private bool isALocked = false; // Aキーのロック状態
     private bool isSLocked = false; // Sキーのロック状態
     private bool isDLocked = false; // Dキーのロック状態
-    private bool isILocked = false; // Iキーのロック状態
-    private bool isJLocked = false; // Jキーのロック状態
-    private bool isKLocked = false; // Kキーのロック状態
-    private bool isLLocked = false; // Lキーのロック状態
-
-
     void Start()
     {
         // AudioSourceコンポーネントを取得
@@ -49,22 +44,6 @@ public class TimerController : MonoBehaviour
             return;
         }
         if (isDLocked )
-        {
-            return;
-        }
-        if (isILocked )
-        {
-            return;
-        }
-        if (isJLocked )
-        {
-            return;
-        }
-        if (isKLocked )
-        {
-            return;
-        }
-        if (isLLocked )
         {
             return;
         }
@@ -100,12 +79,9 @@ public class TimerController : MonoBehaviour
                     isALocked = true;  // Aキーをロック
                     isSLocked = true;  // Sキーをロック
                     isDLocked = true;  // Dキーをロック
-                    isILocked = true;  // Iキーをロック
-                    isJLocked = true;  // Jキーをロック
-                    isKLocked = true;  // Kキーをロック
-                    isLLocked = true;  // Lキーをロック
                     Debug.Log($"Timer stopped at {elapsedTime:F2} seconds with {stopKey} key"); // デバッグログに停止時の経過時間を表示
-
+                    
+                    yajirusi.LockKeys();
                     // 3秒後にシーンをリセットするコルーチンを開始
                     StartCoroutine(ResetSceneAfterDelay(3f));
                 }
